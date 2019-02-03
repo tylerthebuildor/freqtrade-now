@@ -3,7 +3,9 @@ set -e
 
 # Must fill these values out for the script to work
 droplet_name="freqtrade"
-digitalocean_access_token=""
+echo "Paste your Digital Ocean Access Token, followed by [ENTER]:"
+read digitalocean_access_token
+# digitalocean_access_token=""
 
 # For more info check out:
 # Dockers Machine Digital Ocean driver: https://docs.docker.com/machine/drivers/digital-ocean/#options
@@ -15,7 +17,7 @@ docker-machine create \
   --digitalocean-access-token $digitalocean_access_token \
   --digitalocean-region sfo1 \
   --digitalocean-size 1gb \
-  --digitalocean-image docker-16-04 \
+  --digitalocean-image docker-18-04 \
   $droplet_name
 
 # Add local SSH key to remote authorized_keys (optional)

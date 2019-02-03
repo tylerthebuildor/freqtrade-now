@@ -1,5 +1,15 @@
 # Contributing
 
+## Get Digital Ocean droplet types
+
+```bash
+# install jq if not already installed
+brew install jq
+
+# return list
+curl -H "Authorization: Bearer <TOKEN>" https://api.digitalocean.com/v2/images | jq '.' | pbcopy
+```
+
 ## Todo
 
 - Create web interface

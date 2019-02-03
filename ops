@@ -16,6 +16,12 @@ if [ -z $script ] ; then
 elif [ $script == "provision" ] ; then
   ./scripts/provision
 
+elif [ $script == "remove-machine" ] ; then
+  docker-machine rm -f freqtrade # this will delete remote instance as well
+
+elif [ $script == "generate-default-configs" ] ; then
+  ./scripts/generate-default-configs
+
 elif [ $script == "start" ] ; then
   echo "starting $filename"
   docker-compose -f $docker_compose_path/$filename.yml up
@@ -38,13 +44,13 @@ elif [ $script == "deploy" ] ; then
   docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops stop $filename"
 
   # copy local files to remote server
-  docker-machine scp -rf freqtrade/* $droplet_name:~/freqtrade
-  docker-machine scp -rf docker $droplet_name:~/freqtrade/docker
-  docker-machine scp ops $droplet_name:~/freqtrade
+  docker-machine scp -r config/ $droplet_name:~/freqtrade/config/
+  docker-machine scp -r docker/ $droplet_name:~/freqtrade/docker/
+  docker-machine scp ops $droplet_name:~/freqtrade/
 
   # pull latest image and run docker-compose
   docker-machine ssh $droplet_name "docker pull freqtradeorg/freqtrade:develop && docker tag freqtradeorg/freqtrade:develop freqtrade"
-  docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops start-daemon $filename"
+  docker-machine ssh freqtrade "cd ~/freqtrade && ./ops start-daemon $filename"
   # Open docker machine ssh session?
 
 fi

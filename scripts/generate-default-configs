@@ -1,0 +1,3 @@
+cp config/_config.example.json config/backtest-config.json
+cp config/_config.example.json config/dryrun-config.json
+cp config/_config.example.json config/run-config.json

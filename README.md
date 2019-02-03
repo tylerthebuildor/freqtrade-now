@@ -7,7 +7,7 @@ Create a remote server on Digital Ocean that can constantly be running/trading. 
 1. Sign up for [Digital Ocean](https://cloud.digitalocean.com/registrations/new).
 2. Create an [API Key](https://cloud.digitalocean.com/account/api) to get values `digitalocean_access_token` for `scripts/provision`.
 
-After following the steps above and updating the `scripts/provision` file with your `digitalocean_access_token` you can run:
+After following the steps above make sure you have your access token handy then run:
 
 ```bash
 ./ops provision
@@ -18,12 +18,26 @@ After following the steps above and updating the `scripts/provision` file with y
 Install freqtrade and configure it to work with Bittrex crypto exchange for trades and a bot on the messaging platform Telegram used to monitor and control freqtrade itself.
 
 1. Signup for [Bittrex](https://bittrex.com/account/register).
-2. Create a [Bittrex API Key](https://bittrex.com/Manage?view=api) to get values `exchange.key` and `exchange.secret` for `freqtrade/config.json`.
+2. Create a [Bittrex API Key](https://bittrex.com/Manage?view=api) to get values `exchange.key` and `exchange.secret` for `config/config.json`.
 3. Signup for [Telegram](https://web.telegram.org).
-4. Talk with [BotFather](https://telegram.me/BotFather) to create a new bot and get value `telegram.token` for `freqtrade/config.json`.
-5. Talk with [userinfobot](https://telegram.me/userinfobot) to get `telegram.chat_id` value for `freqtrade/config.json`.
+4. Talk with [BotFather](https://telegram.me/BotFather) to create a new bot and get value `telegram.token` for `config/config.json`.
+5. Talk with [userinfobot](https://telegram.me/userinfobot) to get `telegram.chat_id` value for `config/config.json`.
 
-After you've completed the steps above to get all the credentials and you've updated `freqtrade/config.json` you can deploy freqtrade by running one of the following commands:
+After you've completed the steps above to get all the credentials run:
+
+```bash
+./ops generate-default-configs
+```
+
+This will produce a config for each deployment type that you can edit independently of each other:
+
+```bash
+config/backtest-config.json
+config/dryrun-config.json
+config/run-config.json
+```
+
+Update the config you want to deploy with the values from the steps above then run one of the following commands:
 
 ```bash
 # fake trades (start with this)
