@@ -1,0 +1,10 @@
+$droplet_name="freqtrade"
+
+docker-machine ssh $droplet_name " \
+  docker run -d \
+    --name freqtrade \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v ~/freqtrade/config.json:/freqtrade/config.json \
+    -v ~/freqtrade/tradesv3.sqlite:/freqtrade/tradesv3.sqlite \
+    freqtrade --db-url sqlite:///tradesv3.dryrun.sqlite \
+"
