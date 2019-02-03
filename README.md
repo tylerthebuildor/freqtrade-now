@@ -26,7 +26,7 @@ Install freqtrade and configure it to work with Bittrex crypto exchange for trad
 After you've completed the steps above to get all the credentials and you've updated `freqtrade/config.json` you can deploy freqtrade by running one of the following commands:
 
 ```bash
-# fake trades
+# fake trades (start with this)
 ./ops deploy dryrun
 
 # real live trades
