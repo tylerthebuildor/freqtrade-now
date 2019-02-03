@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  freqtrade-run:
+    image: freqtradeorg/freqtrade:develop
+    command: python3 ./freqtrade/main.py -s RunStrategy -c config-run.json --db-url sqlite:///tradesv3.sqlite
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ~/freqtrade/config.json:/freqtrade/config.json
+      - ~/freqtrade/tradesv3.sqlite:/freqtrade/tradesv3.sqlite

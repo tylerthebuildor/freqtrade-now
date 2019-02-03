@@ -1,0 +1,15 @@
+# exchange.key
+# exchange.secret 
+# telegram.token
+# telegram.chat_id
+
+droplet_name="freqtrade"
+
+docker-machine ssh $droplet_name "git clone https://github.com/freqtrade/freqtrade.git"
+docker-machine scp config.json $droplet_name:~/freqtrade
+docker-machine ssh $droplet_name " \
+  cd freqtrade && git checkout develop \
+  docker pull freqtradeorg/freqtrade:develop \
+  docker tag freqtradeorg/freqtrade:develop freqtrade \
+  # docker build -t freqtrade . \
+"

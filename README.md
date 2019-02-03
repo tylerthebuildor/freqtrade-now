@@ -5,10 +5,12 @@
 Create a remote server on Digital Ocean that can constantly be running/trading. Cost is around \$5/mo.
 
 1. Sign up for [Digital Ocean](https://cloud.digitalocean.com/registrations/new).
-2. Create an [API Key](https://cloud.digitalocean.com/account/api) to get values `digitalocean_access_token` for `provision`.
+2. Create an [API Key](https://cloud.digitalocean.com/account/api) to get values `digitalocean_access_token` for `scripts/provision`.
+
+After following the steps above and updating the `scripts/provision` file with your `digitalocean_access_token` you can run:
 
 ```bash
-./provision
+./ops provision
 ```
 
 ## Setup
@@ -16,42 +18,40 @@ Create a remote server on Digital Ocean that can constantly be running/trading. 
 Install freqtrade and configure it to work with Bittrex crypto exchange for trades and a bot on the messaging platform Telegram used to monitor and control freqtrade itself.
 
 1. Signup for [Bittrex](https://bittrex.com/account/register).
-2. Create a [Bittrex API Key](https://bittrex.com/Manage?view=api) to get values `exchange.key` and `exchange.secret` for `config.json`.
+2. Create a [Bittrex API Key](https://bittrex.com/Manage?view=api) to get values `exchange.key` and `exchange.secret` for `freqtrade/config.json`.
 3. Signup for [Telegram](https://web.telegram.org).
-4. Talk with [BotFather](https://telegram.me/BotFather) to create a new bot and get value `telegram.token` for `config.json`.
-5. Talk with [userinfobot](https://telegram.me/userinfobot) to get `telegram.chat_id` value for `config.json`.
+4. Talk with [BotFather](https://telegram.me/BotFather) to create a new bot and get value `telegram.token` for `freqtrade/config.json`.
+5. Talk with [userinfobot](https://telegram.me/userinfobot) to get `telegram.chat_id` value for `freqtrade/config.json`.
 
-```bash
-./setup
-```
-
-## Run
-
-Start running the freshly configured freqtrade on the server we just created. Use `run-dryrun` to complete fake trades just to make sure everything is working correctly. After all looks good you can manually transfer some BTC into Bittrex account and use `run` to start real live trades.
+After you've completed the steps above to get all the credentials and you've updated `freqtrade/config.json` you can deploy freqtrade by running one of the following commands:
 
 ```bash
 # fake trades
-./run-dryrun
+./ops deploy dryrun
 
 # real live trades
-./run
+./ops deploy run
+
+# backtest strategy
+./ops deploy backtest
 ```
 
-## Helpful commands for managing droplet
+## Develop Locally
+
+You can run these containers locally just like you would on Digital Ocean
 
 ```bash
-# Log into droplet
-ssh root@68.183.167.29 # Replace with actual IP
+# fake trades
+./ops start dryrun
 
-# Docker commands
-docker logs freqtrade
-docker logs -f freqtrade
-docker restart freqtrade
-docker stop freqtrade
-docker start freqtrade
-docker rm freqtrade
+# real live trades
+./ops start run
+
+# backtest strategy
+./ops start backtest
 ```
 
 ## Resources
 
 - [Docker Installation](https://www.freqtrade.io/en/latest/installation/#automatic-installation-docker)
+- [Back Testing](https://www.freqtrade.io/en/latest/backtesting/)

@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# These commands take this form
+# ./ops [script] [filename] [option]
+
+script=${1}
+filename=${2:-dev}
+option=${3}
+
+docker_compose_path="./docker"
+droplet_name="freqtrade"
+
+if [ -z $script ] ; then
+  echo "please enter a command after ./ops"
+
+elif [ $script == "provision" ] ; then
+  ./scripts/provision
+
+elif [ $script == "start" ] ; then
+  echo "starting $filename"
+  docker-compose -f $docker_compose_path/$filename.yml up
+
+elif [ $script == "start-daemon" ] ; then
+  echo "starting $filename"
+  docker-compose -f $docker_compose_path/$filename.yml up -d
+
+elif [ $script == "stop" ] ; then
+  echo "stopping $filename"
+  docker-compose -f $docker_compose_path/$filename.yml down
+
+elif [ $script == "deploy" ] ; then
+  echo "deploying $filename"
+
+  # if no ip specified use docker-machine
+  if [ -z $option ] ; then
+    # stop container
+    docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops stop $filename"
+
+    # remove previous folder incase we're updating
+    docker-machine ssh $droplet_name "rm -rf ~/freqtrade"
+
+    # copy local files to remote server
+    docker-machine scp -rf freqtrade/ $droplet_name:~/freqtrade
+    docker-machine scp -rf docker/ $droplet_name:~/freqtrade/docker
+    docker-machine scp ops $droplet_name:~/freqtrade
+
+    # pull latest image and run docker-compose
+    docker-machine ssh $droplet_name "docker pull freqtradeorg/freqtrade:develop && docker tag freqtradeorg/freqtrade:develop freqtrade"
+    docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops start-daemon $filename"
+    # Open docker machine ssh session?
+  
+  # if ip specified use ssh instead of docker-machine
+  else
+    # stop container
+    ssh root@$option "cd ~/freqtrade && ./ops stop $filename"
+
+    # remove previous folder incase we're updating
+    ssh root@$option "rm -rf ~/freqtrade"
+
+    # copy local files to remote server
+    scp -rf freqtrade/ root@$option:~/freqtrade
+    scp -rf docker/ root@$option:~/freqtrade/docker
+    scp ops root@$option:~/freqtrade
+
+    # pull latest image and run docker-compose
+    ssh root@$option "docker pull freqtradeorg/freqtrade:develop && docker tag freqtradeorg/freqtrade:develop freqtrade"
+    ssh root@$option "cd ~/freqtrade && ./ops start-daemon $filename"
+    # Open docker machine ssh session?
+
+fi

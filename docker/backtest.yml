@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  freqtrade-backtest:
+    image: freqtradeorg/freqtrade:develop
+    command: python3 ./freqtrade/main.py -s BackTestStrategy -c config-backtest.json backtesting
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ~/freqtrade/config.json:/freqtrade/config.json
+      - ~/freqtrade/tradesv3.backtest.sqlite:/freqtrade/tradesv3.sqlite
