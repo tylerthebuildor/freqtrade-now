@@ -2,7 +2,7 @@ version: '3.3'
 services:
   freqtrade-dryrun:
     image: freqtradeorg/freqtrade:develop
-    command: python3 ./freqtrade/main.py -s ../config/DryRunStrategy -c ../config/config-dryrun.json --db-url sqlite:///tradesv3.dryrun.sqlite
+    command: -s ../config/DryRunStrategy -c ../config/config-dryrun.json --db-url sqlite:///tradesv3.dryrun.sqlite
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ~/freqtrade/config/dryrun-config.json:/freqtrade/config.json

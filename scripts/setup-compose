@@ -3,8 +3,6 @@
 # telegram.token
 # telegram.chat_id
 
-droplet_name="freqtrade"
-
 docker-machine ssh $droplet_name "git clone https://github.com/tylerbuchea/freqtrade.git"
 docker-machine scp config.json $droplet_name:~/freqtrade
 docker-machine ssh $droplet_name " \

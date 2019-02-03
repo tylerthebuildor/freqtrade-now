@@ -1,11 +1,8 @@
 #!/bin/bash
 set -e
 
-# Must fill these values out for the script to work
-droplet_name="freqtrade"
 echo "Paste your Digital Ocean Access Token, followed by [ENTER]:"
 read digitalocean_access_token
-# digitalocean_access_token=""
 
 # For more info check out:
 # Dockers Machine Digital Ocean driver: https://docs.docker.com/machine/drivers/digital-ocean/#options

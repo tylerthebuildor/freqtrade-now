@@ -1,4 +1,2 @@
-droplet_name="freqtrade"
-
 docker-machine scp config.json $droplet_name:~/freqtrade
 docker-machine ssh $droplet_name "docker restart freqtrade"

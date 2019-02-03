@@ -4,11 +4,13 @@
 # ./ops [script] [filename] [option]
 
 script=${1}
-filename=${2:-dev}
+filename=${2:-dryrun}
 option=${3}
 
 docker_compose_path="./docker"
-droplet_name="freqtrade"
+read -p "Enter the Digital Ocean Droplet Name [freqtrade]: " droplet_name
+droplet_name=${droplet_name:-freqtrade}
+export droplet_name
 
 if [ -z $script ] ; then
   echo "please enter a command after ./ops"
@@ -17,7 +19,7 @@ elif [ $script == "provision" ] ; then
   ./scripts/provision
 
 elif [ $script == "remove-machine" ] ; then
-  docker-machine rm -f freqtrade # this will delete remote instance as well
+  docker-machine rm -f $droplet_name # this will delete remote instance as well
 
 elif [ $script == "generate-default-configs" ] ; then
   ./scripts/generate-default-configs
@@ -34,23 +36,30 @@ elif [ $script == "stop" ] ; then
   echo "stopping $filename"
   docker-compose -f $docker_compose_path/$filename.yml down
 
+elif [ $script == "logs" ] ; then
+  echo "logs $filename"
+  docker-compose -f $docker_compose_path/$filename.yml logs
+
+elif [ $script == "remote-logs" ] ; then
+  echo "logs $filename"
+  docker-machine ssh $droplet_name "cd freqtrade && ./ops logs"
+
 elif [ $script == "deploy" ] ; then
   echo "deploying $filename"
 
   # make sure directory exists
   docker-machine ssh $droplet_name "mkdir -p ~/freqtrade"
 
-  # stop container
-  docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops stop $filename"
-
   # copy local files to remote server
-  docker-machine scp -r config/ $droplet_name:~/freqtrade/config/
-  docker-machine scp -r docker/ $droplet_name:~/freqtrade/docker/
-  docker-machine scp ops $droplet_name:~/freqtrade/
+  docker-machine scp -r -d config/ $droplet_name:~/freqtrade/config/
+  docker-machine scp -r -d docker/ $droplet_name:~/freqtrade/docker/
+  docker-machine scp -d ops $droplet_name:~/freqtrade/
 
-  # pull latest image and run docker-compose
-  docker-machine ssh $droplet_name "docker pull freqtradeorg/freqtrade:develop && docker tag freqtradeorg/freqtrade:develop freqtrade"
-  docker-machine ssh freqtrade "cd ~/freqtrade && ./ops start-daemon $filename"
-  # Open docker machine ssh session?
+  # stop/start docker-compose
+  docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops stop $filename && ./ops start-daemon $filename"
+
+elif [ $script == "restart" ] ; then
+  # stop/start docker-compose
+  docker-machine ssh $droplet_name "cd ~/freqtrade && ./ops stop $filename && ./ops start-daemon $filename"
 
 fi

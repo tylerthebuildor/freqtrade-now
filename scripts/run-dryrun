@@ -1,5 +1,3 @@
-droplet_name="freqtrade"
-
 docker-machine ssh $droplet_name " \
   docker run -d \
     --name freqtrade \
