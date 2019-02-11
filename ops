@@ -8,8 +8,9 @@ filename=${2:-dryrun}
 option=${3}
 
 docker_compose_path="./docker"
-read -p "Enter the Digital Ocean Droplet Name [freqtrade]: " droplet_name
-droplet_name=${droplet_name:-freqtrade}
+droplet_name="freqtrade"
+# read -p "Enter the Digital Ocean Droplet Name [freqtrade]: " droplet_name
+# droplet_name=${droplet_name:-freqtrade}
 export droplet_name
 
 if [ -z $script ] ; then

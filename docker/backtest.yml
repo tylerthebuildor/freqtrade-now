@@ -2,9 +2,10 @@ version: '3.3'
 services:
   freqtrade-backtest:
     image: freqtradeorg/freqtrade:develop
-    command: -s ../config/BackTestStrategy -c ../config/config-backtest.json backtesting --export trades --export-filename=backtest_output.json
+    command: -s BackTestStrategy -c ./backtest-config.json backtesting --export trades --export-filename=backtest_output.json
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ~/freqtrade/config/backtest-config.json:/freqtrade/config.json
+      - ~/freqtrade/config/BackTestStrategy.py:/freqtrade/user_data/strategies/BackTestStrategy.py
       - ~/freqtrade/tradesv3.backtest.sqlite:/freqtrade/tradesv3.sqlite
       - ~/freqtrade/backtest_output.json:/freqtrade/backtest_output.json

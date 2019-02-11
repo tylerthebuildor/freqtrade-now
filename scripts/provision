@@ -14,7 +14,7 @@ docker-machine create \
   --digitalocean-access-token $digitalocean_access_token \
   --digitalocean-region sfo1 \
   --digitalocean-size 1gb \
-  --digitalocean-image docker-18-04 \
+  --digitalocean-image ubuntu-14-04-x64-do \
   $droplet_name
 
 # Add local SSH key to remote authorized_keys (optional)
@@ -23,6 +23,10 @@ docker-machine ssh $droplet_name "cat ~/.ssh/authorized_keys"
 
 # Get IP
 ip=$(docker-machine ip $droplet_name)
+
+# Install docker-compose
+docker-machine ssh $droplet_name 'sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+docker-machine ssh $droplet_name 'sudo chmod +x /usr/local/bin/docker-compose'
 
 # Output
 echo "Droplet name is $droplet_name and ssh command: ssh root@$ip"
